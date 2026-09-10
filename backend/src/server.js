@@ -4,6 +4,7 @@ require('dotenv').config();
 
 const pool = require('./config/db');
 const trainRoutes = require('./routes/train.routes');
+const stationRoutes = require('./routes/station.routes');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -12,6 +13,7 @@ app.use(cors());
 app.use(express.json());
 
 app.use('/api/trains', trainRoutes);
+app.use('/api/stations', stationRoutes);
 
 // Health check route — confirms server + DB are both reachable
 app.get('/health', async (req, res) => {
