@@ -6,6 +6,7 @@ const pool = require('./config/db');
 const trainRoutes = require('./routes/train.routes');
 const stationRoutes = require('./routes/station.routes');
 const routeRoutes = require('./routes/route.routes');
+const scheduleRoutes = require('./routes/schedule.routes');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -16,6 +17,7 @@ app.use(express.json());
 app.use('/api/trains', trainRoutes);
 app.use('/api/stations', stationRoutes);
 app.use('/api/routes', routeRoutes);
+app.use('/api/schedules', scheduleRoutes);
 
 // Health check route — confirms server + DB are both reachable
 app.get('/health', async (req, res) => {
