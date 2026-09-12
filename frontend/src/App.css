@@ -1,0 +1,110 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, sans-serif;
+  background: #f4f6f8;
+}
+
+.app-layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+.sidebar {
+  width: 220px;
+  background: #1a2b4c;
+  color: white;
+  padding: 20px;
+}
+
+.sidebar-title {
+  font-size: 1.2rem;
+  margin-bottom: 24px;
+}
+
+.sidebar ul {
+  list-style: none;
+  padding: 0;
+}
+
+.sidebar li {
+  margin-bottom: 8px;
+}
+
+.sidebar a {
+  color: #cbd5e1;
+  text-decoration: none;
+  display: block;
+  padding: 8px 12px;
+  border-radius: 6px;
+}
+
+.sidebar a:hover {
+  background: #27406e;
+  color: white;
+}
+
+.sidebar a.active {
+  background: #3b82f6;
+  color: white;
+}
+
+.content {
+  flex: 1;
+  padding: 32px;
+}
+
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 16px;
+  margin-top: 20px;
+}
+
+.card {
+  background: white;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.card-label {
+  color: #64748b;
+  font-size: 0.85rem;
+  margin: 0 0 8px 0;
+}
+
+.card-value {
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin: 0;
+  color: #1a2b4c;
+}
+
+.error {
+  color: #dc2626;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-top: 16px;
+}
+
+th, td {
+  text-align: left;
+  padding: 10px 14px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+th {
+  background: #f1f5f9;
+  font-size: 0.85rem;
+  color: #475569;
+}
