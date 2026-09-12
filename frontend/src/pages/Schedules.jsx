@@ -1,4 +1,68 @@
+import { useEffect, useState } from 'react';
+import { getSchedules } from '../services/api';
+
 function Schedules() {
-  return <h1>Schedules (coming soon)</h1>;
+  const [schedules, setSchedules] = useState([]);
+  const [dateFilter, setDateFilter] = useState('');
+  const [error, setError] = useState(null);
+
+  const loadSchedules = (date) => {
+    getSchedules(date).then(setSchedules).catch((err) => setError(err.message));
+  };
+
+  useEffect(() => {
+    loadSchedules();
+  }, []);
+
+  const handleFilter = (e) => {
+    e.preventDefault();
+    loadSchedules(dateFilter || undefined);
+  };
+
+  const handleClear = () => {
+    setDateFilter('');
+    loadSchedules();
+  };
+
+  return (
+    <div>
+      <h1>Schedules</h1>
+      {error && <p className="error">{error}</p>}
+
+      <form onSubmit={handleFilter} style={{ marginBottom: 20 }}>
+        <input
+          type="date"
+          value={dateFilter}
+          onChange={(e) => setDateFilter(e.target.value)}
+        />
+        <button type="submit">Filter</button>
+        <button type="button" onClick={handleClear}>Clear</button>
+      </form>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Train</th>
+            <th>Station</th>
+            <th>Date</th>
+            <th>Arrival</th>
+            <th>Departure</th>
+          </tr>
+        </thead>
+        <tbody>
+          {schedules.map((s) => (
+            <tr key={s.schedule_id}>
+              <td>{s.train_name} ({s.train_number})</td>
+              <td>{s.station_name}</td>
+              <td>{s.schedule_date}</td>
+              <td>{s.arrival_time || '—'}</td>
+              <td>{s.departure_time || '—'}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
 }
+
 export default Schedules;
