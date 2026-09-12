@@ -9,6 +9,7 @@ const routeRoutes = require('./routes/route.routes');
 const scheduleRoutes = require('./routes/schedule.routes');
 const passengerRoutes = require('./routes/passenger.routes');
 const ticketRoutes = require('./routes/ticket.routes');
+const delayRoutes = require('./routes/delay.routes');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -22,6 +23,7 @@ app.use('/api/routes', routeRoutes);
 app.use('/api/schedules', scheduleRoutes);
 app.use('/api/passengers', passengerRoutes);
 app.use('/api/tickets', ticketRoutes);
+app.use('/api/delays', delayRoutes);
 
 // Health check route — confirms server + DB are both reachable
 app.get('/health', async (req, res) => {
