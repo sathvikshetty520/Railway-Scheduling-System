@@ -38,6 +38,8 @@ $$ LANGUAGE plpgsql;
 
 -- 2. Record a delay and return the affected schedules for that train
 --    (implements the "dynamic scheduling" workflow: delay -> affected schedule)
+DROP FUNCTION IF EXISTS record_delay_and_get_impact(VARCHAR, VARCHAR, INTEGER, VARCHAR);
+
 CREATE OR REPLACE FUNCTION record_delay_and_get_impact(
     p_train_number  VARCHAR,
     p_station_code  VARCHAR,
@@ -46,7 +48,7 @@ CREATE OR REPLACE FUNCTION record_delay_and_get_impact(
 ) RETURNS TABLE (
     schedule_id     INTEGER,
     station_code    VARCHAR,
-    schedule_date   DATE,
+    schedule_date   TEXT,
     original_arrival TIME,
     updated_arrival TIME,
     original_departure TIME,
@@ -62,7 +64,7 @@ BEGIN
     RETURN QUERY
     SELECT s.schedule_id,
            s.station_code,
-           s.schedule_date,
+           s.schedule_date::text                                      AS schedule_date,
            s.arrival_time                                            AS original_arrival,
            (s.arrival_time + (p_delay_minutes || ' minutes')::INTERVAL)::TIME AS updated_arrival,
            s.departure_time                                          AS original_departure,
