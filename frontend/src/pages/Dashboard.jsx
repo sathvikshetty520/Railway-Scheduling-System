@@ -12,7 +12,9 @@ function Dashboard() {
   }, []);
 
   if (error) return <p className="error">Error: {error}</p>;
-  if (!summary) return <p>Loading dashboard...</p>;
+  if (!summary) {
+    return <div className="loading-wrap"><span className="spinner"></span>Loading dashboard...</div>;
+  }
 
   const cards = [
     { label: 'Total Trains', value: summary.total_trains },

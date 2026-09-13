@@ -6,12 +6,22 @@ function Reports() {
   const [revenue, setRevenue] = useState([]);
   const [longestDelays, setLongestDelays] = useState([]);
   const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    getTrainsByDelayCount().then(setDelayStats).catch((err) => setError(err.message));
-    getRevenuePerTrain().then(setRevenue).catch((err) => setError(err.message));
-    getLongestDelays().then(setLongestDelays).catch((err) => setError(err.message));
+    Promise.all([getTrainsByDelayCount(), getRevenuePerTrain(), getLongestDelays()])
+      .then(([delays, rev, longest]) => {
+        setDelayStats(delays);
+        setRevenue(rev);
+        setLongestDelays(longest);
+      })
+      .catch((err) => setError(err.message))
+      .finally(() => setLoading(false));
   }, []);
+
+  if (loading) {
+    return <div className="loading-wrap"><span className="spinner"></span>Loading reports...</div>;
+  }
 
   return (
     <div>

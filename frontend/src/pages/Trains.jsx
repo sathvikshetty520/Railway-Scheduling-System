@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { getTrains, createTrain, updateTrain, deleteTrain } from '../services/api';
+import ConfirmModal from '../components/ConfirmModal';
 
 const emptyForm = { train_number: '', train_name: '', train_type: 'Express', capacity: '', status: 'Active' };
 
@@ -8,9 +9,15 @@ function Trains() {
   const [form, setForm] = useState(emptyForm);
   const [editing, setEditing] = useState(false);
   const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [confirmTarget, setConfirmTarget] = useState(null);
 
   const loadTrains = () => {
-    getTrains().then(setTrains).catch((err) => setError(err.message));
+    setLoading(true);
+    getTrains()
+      .then(setTrains)
+      .catch((err) => setError(err.message))
+      .finally(() => setLoading(false));
   };
 
   useEffect(() => {
@@ -48,8 +55,9 @@ function Trains() {
     setEditing(false);
   };
 
-  const handleDelete = async (trainNumber) => {
-    if (!window.confirm(`Delete train ${trainNumber}?`)) return;
+  const handleDeleteConfirmed = async () => {
+    const trainNumber = confirmTarget;
+    setConfirmTarget(null);
     try {
       await deleteTrain(trainNumber);
       loadTrains();
@@ -104,33 +112,43 @@ function Trains() {
         {editing && <button type="button" onClick={handleCancel}>Cancel</button>}
       </form>
 
-      <table>
-        <thead>
-          <tr>
-            <th>Train No.</th>
-            <th>Name</th>
-            <th>Type</th>
-            <th>Capacity</th>
-            <th>Status</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {trains.map((train) => (
-            <tr key={train.train_number}>
-              <td>{train.train_number}</td>
-              <td>{train.train_name}</td>
-              <td>{train.train_type}</td>
-              <td>{train.capacity}</td>
-              <td>{train.status}</td>
-              <td>
-                <button onClick={() => handleEdit(train)}>Edit</button>
-                <button onClick={() => handleDelete(train.train_number)}>Delete</button>
-              </td>
+      {loading ? (
+        <div className="loading-wrap"><span className="spinner"></span>Loading trains...</div>
+      ) : (
+        <table>
+          <thead>
+            <tr>
+              <th>Train No.</th>
+              <th>Name</th>
+              <th>Type</th>
+              <th>Capacity</th>
+              <th>Status</th>
+              <th>Actions</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {trains.map((train) => (
+              <tr key={train.train_number}>
+                <td>{train.train_number}</td>
+                <td>{train.train_name}</td>
+                <td>{train.train_type}</td>
+                <td>{train.capacity}</td>
+                <td>{train.status}</td>
+                <td>
+                  <button onClick={() => handleEdit(train)}>Edit</button>
+                  <button onClick={() => setConfirmTarget(train.train_number)}>Delete</button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
+
+      <ConfirmModal
+        message={confirmTarget ? `Delete train ${confirmTarget}?` : null}
+        onConfirm={handleDeleteConfirmed}
+        onCancel={() => setConfirmTarget(null)}
+      />
     </div>
   );
 }

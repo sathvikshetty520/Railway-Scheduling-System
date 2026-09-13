@@ -10,9 +10,14 @@ function Delays() {
   const [form, setForm] = useState(emptyForm);
   const [error, setError] = useState(null);
   const [impact, setImpact] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   const loadDelays = () => {
-    getDelays().then(setDelays).catch((err) => setError(err.message));
+    setLoading(true);
+    getDelays()
+      .then(setDelays)
+      .catch((err) => setError(err.message))
+      .finally(() => setLoading(false));
   };
 
   useEffect(() => {
@@ -110,28 +115,32 @@ function Delays() {
       )}
 
       <h2>Delay History</h2>
-      <table>
-        <thead>
-          <tr>
-            <th>Train</th>
-            <th>Station</th>
-            <th>Minutes</th>
-            <th>Reason</th>
-            <th>Recorded</th>
-          </tr>
-        </thead>
-        <tbody>
-          {delays.map((d) => (
-            <tr key={d.delay_id}>
-              <td>{d.train_name} ({d.train_number})</td>
-              <td>{d.station_name}</td>
-              <td>{d.delay_minutes}</td>
-              <td>{d.reason}</td>
-              <td>{new Date(d.recorded_time).toLocaleString()}</td>
+      {loading ? (
+        <div className="loading-wrap"><span className="spinner"></span>Loading delays...</div>
+      ) : (
+        <table>
+          <thead>
+            <tr>
+              <th>Train</th>
+              <th>Station</th>
+              <th>Minutes</th>
+              <th>Reason</th>
+              <th>Recorded</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {delays.map((d) => (
+              <tr key={d.delay_id}>
+                <td>{d.train_name} ({d.train_number})</td>
+                <td>{d.station_name}</td>
+                <td>{d.delay_minutes}</td>
+                <td>{d.reason}</td>
+                <td>{new Date(d.recorded_time).toLocaleString()}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
     </div>
   );
 }
