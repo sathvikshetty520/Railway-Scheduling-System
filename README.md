@@ -110,6 +110,8 @@ Open `http://localhost:5173`
 
 ## Database Design Notes
 
+![ER Diagram](docs/dbms_er_diagram.png)
+
 - **3NF normalized** schema with proper PK/FK/CHECK/UNIQUE constraints
 - Two junction tables handle the M:N relationships: `train_route` and `route_station` (the latter includes `sequence_number` for ordered stops)
 - A `schedule` row represents one train's stop at one station on a given date — this is how it connects both to `train` (1:N) and `station` (N:1)
