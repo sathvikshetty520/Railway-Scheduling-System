@@ -80,7 +80,7 @@ Verify it's working: `http://localhost:5000/health`
 
 ```bash
 cd frontend
-npm install
+ npm install
 ```
 
 Create a `.env` file (see `.env.example`):
